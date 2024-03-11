@@ -1,0 +1,11 @@
+twig:
+    file_name_pattern: '*.twig'
+
+paths:
+    'email/default/templates': ~
+    'backend/templates': 'admin'
+
+#default_path:
+when@test:
+    twig:
+        strict_variables: true
