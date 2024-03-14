@@ -11,6 +11,15 @@
         {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        {% block body %}
+            {% block header %}
+                {% include 'landing/layout/header.html.twig' %}
+            {% endblock %}
+            {% block content %}
+            {% endblock %}
+            {% block footer %}
+                {% include 'landing/layout/footer.html.twig' %}
+            {% endblock %}
+        {% endblock %}
     </body>
 </html>

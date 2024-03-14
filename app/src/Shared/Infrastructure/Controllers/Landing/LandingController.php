@@ -11,6 +11,6 @@ class LandingController extends AbstractController
     #[Route('/')]
     public function getMainPage(Request $request): Response
     {
-        return $this->render('landing/main_page/index.html.twig');
+        return $this->render('@landing/main_page.html.twig');
     }
 }

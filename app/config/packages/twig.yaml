@@ -1,12 +1,8 @@
 twig:
     file_name_pattern: '*.twig'
-
-#paths:
-#    'email/default/templates': ~
-#    'backend/templates': 'admin'
-
-default_path: '%kernel.project_dir%/src/Shared/Infrastructure/templates'
-
+    default_path: '%kernel.project_dir%/src/Shared/Infrastructure/templates'
+    paths:
+        '%kernel.project_dir%/src/Landing/Infrastructure/templates': 'landing'
 when@test:
     twig:
         strict_variables: true
