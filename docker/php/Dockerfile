@@ -13,7 +13,7 @@ RUN pecl install xdebug \
   && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 #изучить как запускать контейнеры под пользователем
-RUN addgroup --system --gid 1000 user \
-    && adduser --system --uid 1000 --ingroup user user
+#RUN addgroup --system --gid ${USER_ID} ${USER} \
+#    && adduser --system --uid ${USER_ID} --ingroup ${USER} ${USER}
 
 CMD ["php-fpm"]

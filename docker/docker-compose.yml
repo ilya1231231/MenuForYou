@@ -16,22 +16,25 @@ services:
     networks:
       - menu-dev-net
   php:
-    build: php
+    build:
+      context: ./php
+      args:
+        - USER_ID=${USER_ID}
+        - USER=${USER}
     container_name: php_menu
     restart: always
     volumes:
       - ../app:/var/www/html/app
-#      - ./docker/php/conf.d:/usr/local/etc/php/conf.d
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
       - menu-dev-net
   db:
     image: mysql
+    container_name: mysql_menu
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
