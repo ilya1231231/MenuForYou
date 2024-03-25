@@ -2,7 +2,6 @@
 
 namespace App\User\Infrastructure\Dbal\Entity;
 
-use App\User\Infrastructure\Dbal\Repository;
 use App\User\Infrastructure\Dbal\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
