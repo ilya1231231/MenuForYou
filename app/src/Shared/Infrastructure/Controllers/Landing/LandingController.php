@@ -15,6 +15,7 @@ class LandingController extends AbstractController
     {
         $this->connection = $connection;
     }
+
     #[Route('/')]
     public function getMainPage(Request $request): Response
     {

@@ -3,6 +3,7 @@ twig:
     default_path: '%kernel.project_dir%/src/Shared/Infrastructure/templates'
     paths:
         '%kernel.project_dir%/src/Landing/Infrastructure/templates': 'landing'
+        '%kernel.project_dir%/src/Registration/Infrastructure/templates': 'registration'
 when@test:
     twig:
         strict_variables: true
