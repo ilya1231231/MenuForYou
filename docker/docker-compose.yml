@@ -25,6 +25,7 @@ services:
     restart: always
     volumes:
       - ../app:/var/www/html/app
+#      - ./php/xdebug/conf.d/:/usr/local/etc/php/conf.d/
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:

@@ -19,7 +19,6 @@ class LandingController extends AbstractController
     #[Route('/')]
     public function getMainPage(Request $request): Response
     {
-        $users = $this->connection->fetchAllAssociative('SELECT * FROM users');
         return $this->render('@landing/main_page.html.twig');
     }
 }
