@@ -2,8 +2,8 @@
 
 namespace App\Shared\Infrastructure\Controllers\Registration;
 
-use App\User\Infrastructure\Dbal\Entity\User;
-use App\User\Application\Ports\IRegisterUserPort;
+use App\Shared\Infrastructure\SPI\User\Registration\IRegisterUserReader;
+use App\Shared\Infrastructure\SPI\User\Registration\IRegisterUserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,12 +11,15 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class RegistrationController extends AbstractController
 {
-    private IRegisterUserPort $registerUserPort;
+    private IRegisterUserService $registerUserService;
+    private IRegisterUserReader $registerUserReader;
 
     public function __construct (
-        IRegisterUserPort $registerUserPort,
+        IRegisterUserService $registerUserService,
+        IRegisterUserReader $registerUserReader,
     ){
-        $this->registerUserPort = $registerUserPort;
+        $this->registerUserService = $registerUserService;
+        $this->registerUserReader = $registerUserReader;
     }
 
     #[Route('/registration')]
@@ -26,20 +29,11 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/register')]
-    public function register(Request $request): Response
+    public function registerJson(Request $request): Response
     {
-        /*
-         * чтение из реквеста
-         * Маппинг на ДТО
-         * маппинг на ентити DDD
-         * маппинг на ентити doctrine
-         * сохраниение
-         * */
-        $user = new User();
-        $user->setEmail(random_int(1, 999999) . "@mail.ru");
-        $user->setPassword(random_int(1, 999999) . "@mail.ru");
-
-        $id = $this->registerUserPort->register($user);
+        $rawData = json_decode($request->getContent(), true);
+        $dto = $this->registerUserReader->readJson($rawData);
+        $id = $this->registerUserService->register($dto);
         return new Response('Saved new product with id ' . $id);
     }
 }

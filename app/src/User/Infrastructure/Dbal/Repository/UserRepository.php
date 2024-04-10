@@ -2,13 +2,15 @@
 
 namespace App\User\Infrastructure\Dbal\Repository;
 
+use App\User\Domain\IUserDomainRepository;
+use App\User\Domain\UserDomain;
 use App\User\Infrastructure\Dbal\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
-class UserRepository implements PasswordUpgraderInterface, IUserRepository
+class UserRepository implements PasswordUpgraderInterface, IUserDomainRepository
 {
 
     private UserPasswordHasherInterface $passwordHasher;
@@ -27,8 +29,12 @@ class UserRepository implements PasswordUpgraderInterface, IUserRepository
         // TODO: Implement upgradePassword() method.
     }
 
-    public function create(User $user): int
+    public function create(UserDomain $userDomain): int
     {
+        $user = new User();
+        $user->setEmail($userDomain->getEmail());
+        $user->setPassword($userDomain->getPassword());
+
         $hashedPassword = $this->passwordHasher->hashPassword($user, $user->getPassword());
         $user->setPassword($hashedPassword);
         $this->entityManager->persist($user);
