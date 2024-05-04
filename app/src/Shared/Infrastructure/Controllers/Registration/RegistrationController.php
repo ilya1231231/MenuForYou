@@ -31,7 +31,7 @@ class RegistrationController extends AbstractController
     #[Route('/register')]
     public function registerJson(Request $request): Response
     {
-        $rawData = json_decode($request->getContent(), true);
+        $rawData = $request->getContent();
         $dto = $this->registerUserReader->readJson($rawData);
         $id = $this->registerUserService->register($dto);
         return new Response('Saved new product with id ' . $id);

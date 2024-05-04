@@ -21,7 +21,6 @@ class RegisterUserService implements IRegisterUserService
         $userDomain = new UserDomain();
         $userDomain->setEmail($dto->getEmail());
         $userDomain->setPassword($dto->getPassword());
-
         return $this->userDomainRepository->create($userDomain);
     }
 }

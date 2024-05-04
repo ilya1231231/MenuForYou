@@ -17,5 +17,6 @@ class UserReader implements IUserReader
     {
         $this->registerUserDto->setEmail(random_int(1, 999999) . "@mail.ru");
         $this->registerUserDto->setPassword(random_int(1, 999999) . "@mail.ru");
+        return $this->registerUserDto;
     }
 }

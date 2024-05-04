@@ -16,7 +16,8 @@ class RegisterUserReader implements IRegisterUserReader
 
     public function readJson(string $raw): IRegisterUserDto
     {
-        $this->registerUserDto->setEmail('wwww');
+        $rawData = json_decode($raw, true);
+        $this->registerUserDto->setEmail('zzzzzz@mail.ru');
         $this->registerUserDto->setPassword('wwww222');
 
         return $this->registerUserDto;
