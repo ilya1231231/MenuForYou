@@ -1,11 +1,10 @@
 <?php
-namespace App\User\Application\Adapters;
+namespace App\User\Application\Adapters\Services;
 
 use App\Shared\Infrastructure\SPI\User\Registration\IRegisterUserService;
 use App\User\Application\DTO\IRegisterUserDto;
 use App\User\Domain\IUserDomainRepository;
 use App\User\Domain\UserDomain;
-use App\User\Infrastructure\Dbal\Repository\IUserRepository;
 
 class RegisterUserService implements IRegisterUserService
 {

@@ -34,6 +34,6 @@ class RegistrationController extends AbstractController
         $rawData = $request->getContent();
         $dto = $this->registerUserReader->readJson($rawData);
         $id = $this->registerUserService->register($dto);
-        return new Response('Saved new product with id ' . $id);
+        return new Response('Saved new user with id ' . $id);
     }
 }

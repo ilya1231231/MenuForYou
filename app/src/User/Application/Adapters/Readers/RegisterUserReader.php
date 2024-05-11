@@ -1,6 +1,6 @@
 <?php
 
-namespace App\User\Application\Adapters;
+namespace App\User\Application\Adapters\Readers;
 
 use App\Shared\Infrastructure\SPI\User\Registration\IRegisterUserReader;
 use App\User\Application\DTO\IRegisterUserDto;
@@ -17,8 +17,9 @@ class RegisterUserReader implements IRegisterUserReader
     public function readJson(string $raw): IRegisterUserDto
     {
         $rawData = json_decode($raw, true);
-        $this->registerUserDto->setEmail('zzzzzz@mail.ru');
-        $this->registerUserDto->setPassword('wwww222');
+        //@todo здесь будет валидация
+        $this->registerUserDto->setEmail($rawData['email']);
+        $this->registerUserDto->setPassword($rawData['password']);
 
         return $this->registerUserDto;
     }

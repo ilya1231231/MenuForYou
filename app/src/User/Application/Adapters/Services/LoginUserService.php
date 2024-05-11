@@ -1,6 +1,6 @@
 <?php
 
-namespace App\User\Application\Adapters;
+namespace App\User\Application\Adapters\Services;
 
 use App\Shared\Infrastructure\SPI\User\Login\ILoginUserService;
 use App\User\Application\DTO\ILoginUserDto;

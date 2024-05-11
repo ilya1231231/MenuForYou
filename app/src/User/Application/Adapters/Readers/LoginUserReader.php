@@ -1,6 +1,6 @@
 <?php
 
-namespace App\User\Application\Adapters;
+namespace App\User\Application\Adapters\Readers;
 use App\Shared\Infrastructure\SPI\User\Login\ILoginUserReader;
 use App\User\Application\DTO\ILoginUserDto;
 
