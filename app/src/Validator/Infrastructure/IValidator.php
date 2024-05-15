@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Infastructure\Validator;
+namespace App\Validator\Infrastructure;
 
 
 use Illuminate\Support\MessageBag;

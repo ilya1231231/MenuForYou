@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Infastructure\Validator;
+namespace App\Validator\Infrastructure;
 
+use App\Validator\Infrastructure\SPI\IValidatorFactory;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Translation\FileLoader;
 use Illuminate\Translation\Translator;
 use Illuminate\Validation\Factory;
 
-class ValidatorFactory
+class ValidatorFactory implements IValidatorFactory
 {
     private $translator;
     private $factory;
