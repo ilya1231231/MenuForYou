@@ -18,7 +18,7 @@ services:
         exclude:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
-            - '../src/Shared/infrastructure/Kernel.php'
+            - '../src/Kernel.php'
     App\Validator\Infrastructure\SPI\IValidatorFactory:
         class: 'App\Validator\Infrastructure\ValidatorFactory'
         public: true
