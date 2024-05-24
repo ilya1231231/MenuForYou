@@ -2,29 +2,37 @@
 
 namespace App\Modules\User\Infrastructure\Readers;
 
+use App\Modules\User\Application\DTO\RegisterUserDto;
 use App\Validator\Infrastructure\SPI\IValidatorFactory;
-use App\Modules\User\Application\DTO\IRegisterUserDto;
 
 class RegisterUserReader
 {
-    private IRegisterUserDto $registerUserDto;
     private IValidatorFactory $validatorFactory;
 
     public function __construct(
-        IRegisterUserDto $registerUserDto,
         IValidatorFactory $validatorFactory,
     ){
-        $this->registerUserDto = $registerUserDto;
         $this->validatorFactory = $validatorFactory;
     }
 
-    public function readJson(string $raw): IRegisterUserDto
+    public function readJson(string $raw): RegisterUserDto
     {
         $rawData = json_decode($raw, true);
-        $validator = $this->validatorFactory->createValidator($rawData);
+        $rules = [
+            'email' => 'required|email',
+            'password' => 'required|password',
+        ];
+        $labels = [
+            'email' => 'Электронная почта',
+            'password' => 'Пароль',
+        ];
+        $validator = $this->validatorFactory->createValidator($rawData, $rules, [], $labels);
         $validator->validateOrEx();
-        $this->registerUserDto->setEmail($rawData['email']);
-        $this->registerUserDto->setPassword($rawData['password']);
-        return $this->registerUserDto;
+
+        $dto = new RegisterUserDto();
+        $dto->setEmail($rawData['email']);
+        $dto->setPassword($rawData['password']);
+
+        return $dto;
     }
 }

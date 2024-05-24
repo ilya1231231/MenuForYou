@@ -2,9 +2,9 @@
 
 namespace App\Modules\User\Infrastructure\API;
 
-use App\Modules\User\Application\DTO\ILoginUserDto;
+use App\Modules\User\Application\DTO\LoginUserDto;
 
 interface ILoginUserService
 {
-    public function login(ILoginUserDto $dto): int;
+    public function login(LoginUserDto $dto): int;
 }

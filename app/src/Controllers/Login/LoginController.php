@@ -4,6 +4,7 @@ namespace App\Controllers\Login;
 use App\Modules\User\Infrastructure\API\ILoginUserService;
 use App\Modules\User\Infrastructure\Readers\LoginUserReader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -37,12 +38,13 @@ class LoginController extends AbstractController
         return $this->render('login/index.html.twig', $data);
     }
 
+//    @todo авториазция через json
     #[Route('/loginJson')]
-    public function loginJson(Request $request): Response
+    public function login(Request $request): Response
     {
         $rawData = $request->getContent();
         $dto = $this->loginUserReader->readJson($rawData);
         $id = $this->loginUserService->login($dto);
-        return new Response('Saved new product with id ' . $id);
+        return new JsonResponse(['message' => 'Вы успешно авторизованны']);
     }
 }
