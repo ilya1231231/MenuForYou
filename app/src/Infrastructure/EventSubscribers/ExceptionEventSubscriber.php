@@ -1,6 +1,6 @@
 <?php
 
-namespace EventSubscribers\Infrastructure;
+namespace App\Infrastructure\EventSubscribers;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -19,7 +19,7 @@ class ExceptionEventSubscriber implements EventSubscriberInterface
 
     public function exceptionsTransformer(ExceptionEvent $event)
     {
-        $c = $event->getThrowable();
-        $f = 2;
+        $exception = $event->getThrowable();
+
     }
 }

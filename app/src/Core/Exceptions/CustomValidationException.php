@@ -2,7 +2,7 @@
 
 namespace App\Core\Exceptions;
 
-class ValidationException extends \Exception
+class CustomValidationException extends \Exception
 {
     private $unnamedError;
     private $namedErrors = [];
