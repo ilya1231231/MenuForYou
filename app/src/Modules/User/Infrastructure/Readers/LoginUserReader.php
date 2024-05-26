@@ -3,15 +3,14 @@
 namespace App\Modules\User\Infrastructure\Readers;
 
 use App\Modules\User\Application\DTO\LoginUserDto;
-use App\Validator\Infrastructure\SPI\IValidatorFactory;
+use App\Validator\Infrastructure\ValidatorFactory;
 
 class LoginUserReader
 {
-
-    private IValidatorFactory $validatorFactory;
+    private ValidatorFactory $validatorFactory;
 
     public function __construct(
-        IValidatorFactory $validatorFactory,
+        ValidatorFactory $validatorFactory,
     ){
         $this->validatorFactory = $validatorFactory;
     }

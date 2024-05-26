@@ -2,7 +2,9 @@
 
 namespace App\Core\Exceptions;
 
-class CustomValidationException extends \Exception
+use Throwable;
+
+class PublicValidationException extends \Exception implements IPublicException
 {
     private $unnamedError;
     private $namedErrors = [];

@@ -2,7 +2,7 @@
 
 namespace App\Validator\Infrastructure;
 
-use App\Core\Exceptions\CustomValidationException;
+use App\Core\Exceptions\PublicValidationException;
 use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Support\MessageBag;
 
@@ -23,7 +23,7 @@ class Validator extends \Illuminate\Validation\Validator implements IValidator
         if (!parent::fails()) {
             return parent::validated();
         }
-        throw new CustomValidationException('Переданы невалидные данные', parent::errors()->toArray());
+        throw new PublicValidationException('Переданы невалидные данные', parent::errors()->toArray());
     }
 
     public function validated(): array

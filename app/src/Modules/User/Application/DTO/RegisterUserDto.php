@@ -2,7 +2,7 @@
 
 namespace App\Modules\User\Application\DTO;
 
-class RegisterUserDto implements IRegisterUserDto
+class RegisterUserDto
 {
     private string $email;
 

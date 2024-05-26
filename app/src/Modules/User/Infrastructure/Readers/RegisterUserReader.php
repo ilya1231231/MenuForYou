@@ -19,8 +19,8 @@ class RegisterUserReader
     {
         $rawData = json_decode($raw, true);
         $rules = [
-            'email' => 'required|email',
-            'password' => 'required|password',
+            'email' => 'required',
+            'password' => 'required|integer',
         ];
         $labels = [
             'email' => 'Электронная почта',
