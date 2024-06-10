@@ -3,3 +3,5 @@ controllers:
         path: ../src/Controllers/
         namespace: App\Controllers
     type: attribute
+api_login_check:
+    path: api/login_check

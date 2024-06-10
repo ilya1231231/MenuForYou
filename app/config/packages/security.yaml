@@ -6,12 +6,27 @@ security:
     providers:
         app_user_provider:
             entity:
-                class: App\User\Infrastructure\Dbal\Entity\User
+                class: App\Modules\User\Infrastructure\Dbal\Entity\User
                 property: email
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        login:
+            pattern: ^/api/login
+            stateless: true
+            json_login:
+                check_path: /api/login_check
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+        jwt_api:
+            pattern: ^/api/
+            #            user_checker: App\Security\UserChecker
+            provider: app_user_provider
+            custom_authenticator: App\Infrastructure\Security\JwtApiAuthenticator
+            stateless: true
+            lazy: false
+        #            entry_point: App\Infrastructure\Security\OauthFirewallAuthenticationErrorHandler
         main:
             lazy: true
             provider: app_user_provider
@@ -33,6 +48,7 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
          - { path: ^/registration, roles: ROLE_USER }
+         - { path: ^/api/login, roles: PUBLIC_ACCESS }
 
 when@test:
     security:
