@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controllers\Landing;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -9,10 +10,8 @@ use Symfony\Component\Routing\Attribute\Route;
 class LandingController extends AbstractController
 {
 
-    public function __construct
-    (
-
-    ) {
+    public function __construct()
+    {
     }
 
     #[Route('/')]
