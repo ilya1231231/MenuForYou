@@ -9,9 +9,10 @@ use Symfony\Component\Console\Input\InputInterface;
 #[AsCommand(name: 'parse:start_parse_info')]
 class InfoParserIndex extends Command
 {
+    //php bin/console parse:start_parse_info
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        echo '2222222';
+        echo file_get_contents('https://www.gismeteo.ru');
         return 1;
     }
 }
