@@ -56,9 +56,10 @@ class InfoParserIndex extends Command
 
         foreach ($todayForecast as $forecast) {
             $time = 'Время ' . $forecast['time'];
-            $temp = 'Температура '. $forecast['tempe_comf'];
+            $temp = 'Температура '. $forecast['tempe'];
+            $tempComf = 'Ощущается как '. $forecast['tempe_comf'];
             $rainChance = 'Вероятность осадков '. $forecast['precip_prob'] . '%';
-            print_r(implode('; ', [$time, $temp, $rainChance]). PHP_EOL);
+            print_r(implode('; ', [$time, $temp, $tempComf, $rainChance]). PHP_EOL);
         }
         
 //        foreach ($forecasts as $forecast) {
