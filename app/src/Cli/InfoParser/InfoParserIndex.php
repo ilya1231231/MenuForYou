@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Cli\InfoParser;
 
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -12,7 +13,12 @@ class InfoParserIndex extends Command
     //php bin/console parse:start_parse_info
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        echo file_get_contents('https://www.gismeteo.ru');
+        //find forecasts
+        $c = 1;
+//        $rawHtml = htmlspecialchars_decode(
+//            file_get_contents('https://pogoda.mail.ru/prognoz/yoshkar-ola/24hours/')
+//        );
+
         return 1;
     }
 }

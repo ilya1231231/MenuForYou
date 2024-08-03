@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers\Landing;
+namespace App\Controllers\Http\Web\Landing;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,6 +17,7 @@ class LandingController extends AbstractController
     #[Route('/')]
     public function getMainPage(Request $request): Response
     {
+        $g = 1;
         return $this->render('landing/main_page.html.twig');
     }
 }
