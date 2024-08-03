@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers\Http\Api\Registration;
+namespace App\Controllers\Http\Api;
 
 use App\Modules\User\Infrastructure\Readers\RegisterUserReader;
 use App\Modules\User\Infrastructure\API\IRegisterUserService;

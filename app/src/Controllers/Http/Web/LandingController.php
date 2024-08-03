@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers\Http\Web\Landing;
+namespace App\Controllers\Http\Web;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
