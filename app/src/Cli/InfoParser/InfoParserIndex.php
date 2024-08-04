@@ -2,6 +2,8 @@
 
 namespace App\Cli\InfoParser;
 
+use App\Modules\MailRuWeather\Infrastructure\Dbal\Entity\MailRuWeather;
+use App\Modules\MailRuWeather\Infrastructure\Dbal\Repository\MailRuWeatherRepository;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -12,9 +14,16 @@ use Symfony\Component\DomCrawler\Crawler;
 class InfoParserIndex extends Command
 {
 
+    public function __construct(
+        private MailRuWeatherRepository $mailRuWeatherRepository
+    ){
+        parent::__construct();
+    }
+
     //php bin/console parse:start_parse_info
     public function execute(InputInterface $input, OutputInterface $output): int
     {
+        $this->testSave();
         //find forecasts
         $rawHtml = file_get_contents('https://pogoda.mail.ru/prognoz/yoshkar-ola/24hours/');
 
@@ -55,23 +64,30 @@ class InfoParserIndex extends Command
         }
 
         foreach ($todayForecast as $forecast) {
+            if (!isset($forecast['time'], $forecast['tempe'], $forecast['tempe_comf'], $forecast['precip_prob'])) {
+                //залогированить
+                continue;
+            }
+
             $time = 'Время ' . $forecast['time'];
             $temp = 'Температура '. $forecast['tempe'];
-            $tempComf = 'Ощущается как '. $forecast['tempe_comf'];
+            $tempSense = 'Ощущается как '. $forecast['tempe_comf'];
             $rainChance = 'Вероятность осадков '. $forecast['precip_prob'] . '%';
-            print_r(implode('; ', [$time, $temp, $tempComf, $rainChance]). PHP_EOL);
+            print_r(implode('; ', [$time, $temp, $tempSense, $rainChance]). PHP_EOL);
         }
-        
-//        foreach ($forecasts as $forecast) {
-//
-//        }
 
-//        foreach ($dates as $date) {
-//            if (!isset($date['forecasts'])) {
-//                //публичные ошибки
-//                throw new \Exception('Данные по погоде на сегодня отсутствуют');
-//            }
-//        }
+
+
         return 1;
+    }
+
+    private function testSave()
+    {
+        $mailRuWeather = new MailRuWeather();
+        $mailRuWeather->setDatetime(new \DateTime());
+        $mailRuWeather->setRainChance(2);
+        $mailRuWeather->setTempSense('+20');
+        $mailRuWeather->setTemp('+29');
+        $this->mailRuWeatherRepository->save($mailRuWeather);
     }
 }
