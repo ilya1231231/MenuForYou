@@ -4,6 +4,7 @@ namespace App\Cli\InfoParser;
 
 use App\Modules\MailRuWeather\Infrastructure\Dbal\Entity\MailRuWeather;
 use App\Modules\MailRuWeather\Infrastructure\Dbal\Repository\MailRuWeatherRepository;
+use App\Modules\MailRuWeather\Infrastructure\Readers\MailRuWeatherReader;
 use DateTime;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -16,6 +17,7 @@ class InfoParserIndex extends Command
 {
 
     public function __construct(
+        private readonly MailRuWeatherReader $mailRuWeatherReader,
         private MailRuWeatherRepository $mailRuWeatherRepository
     ){
         parent::__construct();
@@ -26,6 +28,7 @@ class InfoParserIndex extends Command
     {
         //find forecasts
         $rawHtml = file_get_contents('https://pogoda.mail.ru/prognoz/yoshkar-ola/24hours/');
+//        $dtoArray = $this->mailRuWeatherReader->readRawHtml($rawHtml);
 
         $crawler = new Crawler($rawHtml);
         $crawler = $crawler->filter('div[data-module="ForecastHour"]');
@@ -83,11 +86,11 @@ class InfoParserIndex extends Command
             $mailRuWeather->setRainChance($forecast['precip_prob']);
             $this->mailRuWeatherRepository->save($mailRuWeather);
 
-//            $time = 'Время ' . $forecast['time'];
-//            $temp = 'Температура '. $forecast['tempe'];
-//            $tempSense = 'Ощущается как '. $forecast['tempe_comf'];
-//            $rainChance = 'Вероятность осадков '. $forecast['precip_prob'] . '%';
-//            print_r(implode('; ', [$time, $temp, $tempSense, $rainChance]). PHP_EOL);
+            $time = 'Время ' . $forecast['time'];
+            $temp = 'Температура '. $forecast['tempe'];
+            $tempSense = 'Ощущается как '. $forecast['tempe_comf'];
+            $rainChance = 'Вероятность осадков '. $forecast['precip_prob'] . '%';
+            print_r(implode('; ', [$time, $temp, $tempSense, $rainChance]). PHP_EOL);
         }
 
 

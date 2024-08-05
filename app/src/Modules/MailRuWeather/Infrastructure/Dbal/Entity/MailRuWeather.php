@@ -27,7 +27,7 @@ class MailRuWeather
     private string $temp_sense;
 
     #[ORM\Column(type: 'integer', nullable: false)]
-    private string $rain_chance;
+    private int $rain_chance;
 
     public function getId(): ?int
     {
@@ -75,7 +75,7 @@ class MailRuWeather
         return $this->rain_chance;
     }
 
-    public function setRainChance(string $rainChance): self
+    public function setRainChance(int $rainChance): self
     {
         $this->rain_chance = $rainChance;
 
