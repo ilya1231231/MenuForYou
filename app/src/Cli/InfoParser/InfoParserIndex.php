@@ -68,7 +68,7 @@ class InfoParserIndex extends Command
 
         foreach ($todayForecast as $forecast) {
             if (!isset($forecast['time'], $forecast['tempe'], $forecast['tempe_comf'], $forecast['precip_prob'])) {
-                //залогировать
+                //@todo залогировать
                 continue;
             }
 
@@ -91,8 +91,18 @@ class InfoParserIndex extends Command
             $tempSense = 'Ощущается как '. $forecast['tempe_comf'];
             $rainChance = 'Вероятность осадков '. $forecast['precip_prob'] . '%';
             print_r(implode('; ', [$time, $temp, $tempSense, $rainChance]). PHP_EOL);
-        }
 
+            //@todo перенести в отельную cli команду, подготовить данные в сервисе
+
+            //@todo читать из env
+            $token = "";
+            $chat_id = -4207384718;
+            $textMessage = implode('; ', [$time, $temp, $tempSense, $rainChance]);
+            $textMessage = urlencode($textMessage);
+
+            $urlQuery = "https://api.telegram.org/bot". $token ."/sendMessage?chat_id=". $chat_id ."&text=" . $textMessage;
+            $result = file_get_contents($urlQuery);
+        }
 
 
         return 1;
