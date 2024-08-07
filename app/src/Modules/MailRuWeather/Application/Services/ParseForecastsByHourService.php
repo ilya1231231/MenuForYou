@@ -3,14 +3,10 @@
 namespace App\Modules\MailRuWeather\Application\Services;
 
 use App\Modules\MailRuWeather\Application\DTO\ForecastByHourDto;
+use App\Modules\MailRuWeather\Infrastructure\API\IParseForecastsByHourService;
 
-class ParseForecastsByHourService
+class ParseForecastsByHourService implements IParseForecastsByHourService
 {
-    public function parseDataCheck(array $data): void
-    {
-
-    }
-
     /**
      * @param ForecastByHourDto[] $dtoArray
      */

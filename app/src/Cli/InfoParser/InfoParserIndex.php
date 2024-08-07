@@ -2,10 +2,10 @@
 
 namespace App\Cli\InfoParser;
 
+use App\Modules\MailRuWeather\Infrastructure\API\IParseForecastsByHourService;
 use App\Modules\MailRuWeather\Infrastructure\Dbal\Entity\MailRuWeather;
 use App\Modules\MailRuWeather\Infrastructure\Dbal\Repository\MailRuWeatherRepository;
 use App\Modules\MailRuWeather\Infrastructure\Readers\MailRuWeatherReader;
-use DateTime;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -18,7 +18,8 @@ class InfoParserIndex extends Command
 
     public function __construct(
         private readonly MailRuWeatherReader $mailRuWeatherReader,
-        private MailRuWeatherRepository $mailRuWeatherRepository
+        private readonly MailRuWeatherRepository $mailRuWeatherRepository,
+        private readonly IParseForecastsByHourService $parseForecastsByHourService,
     ){
         parent::__construct();
     }
@@ -26,10 +27,9 @@ class InfoParserIndex extends Command
     //php bin/console parse:start_parse_info
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        //find forecasts
         $rawHtml = file_get_contents('https://pogoda.mail.ru/prognoz/yoshkar-ola/24hours/');
 //        $dtoArray = $this->mailRuWeatherReader->readRawHtml($rawHtml);
-
+//        $this->parseForecastsByHourService->saveResults($dtoArray);
         $crawler = new Crawler($rawHtml);
         $crawler = $crawler->filter('div[data-module="ForecastHour"]');
 
