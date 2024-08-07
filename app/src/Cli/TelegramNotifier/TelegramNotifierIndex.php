@@ -17,7 +17,7 @@ class TelegramNotifierIndex
     public function execute(InputInterface $input, OutputInterface $output): int
     {
 
-//        $token = "6975459816:AAFUIqlAjL9Kz0YsKLdoZQbBLuf4pRu-eig";
+//        $token = "";
 //        $chat_id = -4207384718;
 //        $textMessage = implode('; ', [$time, $temp, $tempSense, $rainChance]);
 //        $textMessage = urlencode($textMessage);
