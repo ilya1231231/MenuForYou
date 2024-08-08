@@ -1,25 +1,23 @@
 <?php
 
-namespace App\Cli\InfoParser;
+namespace App\Cli\CronJob\Hourly;
 
-use App\Modules\MailRuWeather\Infrastructure\API\IParseForecastsByHourService;
 use App\Modules\MailRuWeather\Infrastructure\Dbal\Entity\MailRuWeather;
 use App\Modules\MailRuWeather\Infrastructure\Dbal\Repository\MailRuWeatherRepository;
-use App\Modules\MailRuWeather\Infrastructure\Readers\MailRuWeatherReader;
+use DateTime;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DomCrawler\Crawler;
 
 #[AsCommand(name: 'parse:start_parse_info')]
-class InfoParserIndex extends Command
+class MailRuWeatherParser extends Command
 {
 
     public function __construct(
-        private readonly MailRuWeatherReader $mailRuWeatherReader,
         private readonly MailRuWeatherRepository $mailRuWeatherRepository,
-        private readonly IParseForecastsByHourService $parseForecastsByHourService,
+        private readonly string $mailRuWeatherUrl,
     ){
         parent::__construct();
     }
@@ -27,9 +25,8 @@ class InfoParserIndex extends Command
     //php bin/console parse:start_parse_info
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        $rawHtml = file_get_contents('https://pogoda.mail.ru/prognoz/yoshkar-ola/24hours/');
-//        $dtoArray = $this->mailRuWeatherReader->readRawHtml($rawHtml);
-//        $this->parseForecastsByHourService->saveResults($dtoArray);
+        $parseUrl = $this->mailRuWeatherUrl . '/prognoz/yoshkar-ola/24hours/';
+        $rawHtml = file_get_contents($parseUrl);
         $crawler = new Crawler($rawHtml);
         $crawler = $crawler->filter('div[data-module="ForecastHour"]');
 
@@ -91,17 +88,8 @@ class InfoParserIndex extends Command
             $tempSense = 'Ощущается как '. $forecast['tempe_comf'];
             $rainChance = 'Вероятность осадков '. $forecast['precip_prob'] . '%';
             print_r(implode('; ', [$time, $temp, $tempSense, $rainChance]). PHP_EOL);
-
             //@todo перенести в отельную cli команду, подготовить данные в сервисе
 
-            //@todo читать из env
-            $token = "";
-            $chat_id = -4207384718;
-            $textMessage = implode('; ', [$time, $temp, $tempSense, $rainChance]);
-            $textMessage = urlencode($textMessage);
-
-            $urlQuery = "https://api.telegram.org/bot". $token ."/sendMessage?chat_id=". $chat_id ."&text=" . $textMessage;
-            $result = file_get_contents($urlQuery);
         }
 
 

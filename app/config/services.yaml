@@ -25,5 +25,15 @@ services:
             $locale: 'ru'
         lazy: true
     App\Infrastructure\EventSubscribers\ExceptionEventSubscriber:
+
+    App\Cli\CronJob\Hourly\MailRuWeatherParser:
+        arguments:
+            $mailRuWeatherUrl: '%env(MAIL_RU_WEATHER_URL)%'
+
+    App\Cli\CronJob\Daily\MorningForecastTelegramNotifier:
+        arguments:
+            $telegramApiToken: '%env(TELEGRAM_BOT_API_TOKEN)%'
+            $telegramChatId: '%env(TELEGRAM_CHAT_ID)%'
+            $telegramApiUrl: '%env(TELEGRAM_API_URL)%'
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
