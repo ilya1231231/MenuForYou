@@ -2,6 +2,7 @@
 
 namespace App\Cli\CronJob\Daily;
 
+use App\Modules\MailRuWeather\Infrastructure\Dbal\Entity\MailRuWeather;
 use App\Modules\MailRuWeather\Infrastructure\Dbal\Repository\MailRuWeatherRepository;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -26,16 +27,9 @@ class MorningForecastTelegramNotifier extends Command
         $datetime = new \DateTime();
         $todayForecasts = $this->mailRuWeatherRepository->getAllByDay($datetime);
 
-        $highRainChance = [];
-        $tempByHour = [];
-        foreach ($todayForecasts as $forecast) {
-            $tempByHour[] = $forecast->getTemp();
-            if ($forecast->getRainChance() > 60) {
-                $highRainChance[] = $forecast;
-            }
-        }
+        $rainForecast = $this->getRainForecast($todayForecasts);
 
-        $textMessage = 'text';
+        $textMessage = $rainForecast;
         $query = [
             'chat_id' 	=> $this->telegramChatId,
             'text'  	=> $textMessage,
@@ -47,5 +41,47 @@ class MorningForecastTelegramNotifier extends Command
         file_get_contents($url);
 
         return 1;
+    }
+
+    /**
+     * @param $forecasts MailRuWeather[]
+     * */
+    private function getRainForecast(array $forecasts): string
+    {
+        if (!$forecasts) {
+            return 'Дождя не ожидается';
+        }
+
+        $highRainChanceForecasts = array_filter($forecasts, static fn(MailRuWeather $el) => $el->getRainChance() > 50);
+
+        $everyHourRainChunks = [];
+        foreach ($highRainChanceForecasts as $forecast) {
+            if (!$everyHourRainChunks) {
+                $everyHourRainChunks[][] = $forecast;
+                continue;
+            }
+
+            $chunkKey = array_key_last($everyHourRainChunks);
+            $lastForecastOfChunk = end($everyHourRainChunks[$chunkKey]);
+            $datetimeDiff = $forecast->getDatetime()->diff($lastForecastOfChunk->getDatetime());
+            if ($datetimeDiff->h > 1) {
+                $everyHourRainChunks[][] = $forecast;
+                continue;
+            }
+
+            $everyHourRainChunks[$chunkKey][] = $forecast;
+        }
+
+        $rainForecast = 'Возможен дождь! ';
+        foreach ($everyHourRainChunks as $chunk) {
+            $rainBeginForecast = array_shift($chunk);
+            $rainEndForecast = end($chunk);
+            $timeBegin = $rainBeginForecast->getDatetime()->format('G:i');
+            $timeEnd = $rainEndForecast->getDatetime()->format('G:i');
+            $forecast = 'C ' . $timeBegin . ' до ' . $timeEnd . '. ';
+            $rainForecast = $rainForecast . $forecast;
+        }
+
+        return $rainForecast;
     }
 }
