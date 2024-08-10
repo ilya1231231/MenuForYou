@@ -25,6 +25,7 @@ class MailRuWeatherParser extends Command
     //php bin/console parse:start_parse_info
     public function execute(InputInterface $input, OutputInterface $output): int
     {
+        //@todo спарсить description
         $parseUrl = $this->mailRuWeatherUrl . '/prognoz/yoshkar-ola/24hours/';
         $rawHtml = file_get_contents($parseUrl);
         $crawler = new Crawler($rawHtml);
