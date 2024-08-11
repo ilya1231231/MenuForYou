@@ -4,6 +4,8 @@ namespace App\Cli\CronJob\Daily;
 
 use App\Modules\MailRuWeather\Infrastructure\Dbal\Entity\MailRuWeather;
 use App\Modules\MailRuWeather\Infrastructure\Dbal\Repository\MailRuWeatherRepository;
+use App\Modules\Telegram\Application\DTO\TelegramMessageDto;
+use App\Modules\Telegram\Application\Services\TelegramNotifierService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,9 +16,8 @@ class MorningForecastTelegramNotifier extends Command
 {
     public function __construct(
         private readonly MailRuWeatherRepository $mailRuWeatherRepository,
-        private readonly string $telegramApiToken,
+        private readonly TelegramNotifierService $telegramNotifierService,
         private readonly string $telegramChatId,
-        private readonly string $telegramApiUrl
     ){
         parent::__construct();
     }
@@ -26,20 +27,9 @@ class MorningForecastTelegramNotifier extends Command
     {
         $datetime = new \DateTime();
         $todayForecasts = $this->mailRuWeatherRepository->getAllByDay($datetime);
-
         $rainForecast = $this->getRainForecast($todayForecasts);
-
-        $textMessage = $rainForecast;
-        $query = [
-            'chat_id' 	=> $this->telegramChatId,
-            'text'  	=> $textMessage,
-            'parse_mode' => 'html',
-        ];
-        $queryParams = http_build_query($query);
-
-        $url = $this->telegramApiUrl . '/bot'. $this->telegramApiToken .'/sendMessage?' . $queryParams;
-        file_get_contents($url);
-
+        $dto = new TelegramMessageDto($this->telegramChatId, $rainForecast, 'html');
+        $this->telegramNotifierService->sendMessage($dto);
         return 1;
     }
 
@@ -74,7 +64,13 @@ class MorningForecastTelegramNotifier extends Command
 
         $rainForecast = 'Возможен дождь! ';
         foreach ($everyHourRainChunks as $chunk) {
-            $rainBeginForecast = array_shift($chunk);
+            $array = array_values($chunk);
+            $rainBeginForecast = array_shift($array);
+            if (count($chunk) === 1) {
+                $rainForecast = $rainForecast . 'В ' . $rainBeginForecast->getDatetime()->format('G:i') . '. ';
+                continue;
+            }
+
             $rainEndForecast = end($chunk);
             $timeBegin = $rainBeginForecast->getDatetime()->format('G:i');
             $timeEnd = $rainEndForecast->getDatetime()->format('G:i');

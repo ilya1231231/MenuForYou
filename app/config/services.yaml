@@ -32,8 +32,11 @@ services:
 
     App\Cli\CronJob\Daily\MorningForecastTelegramNotifier:
         arguments:
-            $telegramApiToken: '%env(TELEGRAM_BOT_API_TOKEN)%'
             $telegramChatId: '%env(TELEGRAM_CHAT_ID)%'
+
+    App\Modules\Telegram\Application\Services\TelegramNotifierService:
+        arguments:
+            $telegramApiToken: '%env(TELEGRAM_BOT_API_TOKEN)%'
             $telegramApiUrl: '%env(TELEGRAM_API_URL)%'
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
