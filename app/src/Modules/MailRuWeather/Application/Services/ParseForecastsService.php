@@ -34,7 +34,14 @@ class ParseForecastsService
 
         $todayForecastsByHour = [];
         foreach ($todayForecast as $forecast) {
-            if (!isset($forecast['time'], $forecast['tempe'], $forecast['tempe_comf'], $forecast['precip_prob'])) {
+            $isForecastDataExist =
+                !empty($forecast['time'])
+                && !empty($forecast['tempe'])
+                && !empty($forecast['tempe_comf'])
+                && !empty($forecast['precip_prob'])
+                && !empty($forecast['description']);
+
+            if (!$isForecastDataExist) {
                 //@todo залогировать
                 continue;
             }
@@ -49,6 +56,7 @@ class ParseForecastsService
                 'temp' => $forecast['tempe'],
                 'temp_sense' => $forecast['tempe_comf'],
                 'rain_chance' => $forecast['precip_prob'],
+                'description' => $forecast['description'],
             ];
             $forecastForHourDto = new ForecastByHourDto($data);
 
