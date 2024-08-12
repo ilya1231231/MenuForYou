@@ -7,11 +7,53 @@ use App\Modules\MailRuWeather\Application\DTO\ForecastByHourDto;
 class ForecastAnalyzerService
 {
     /**
-     * @param $dtoArray ForecastByHourDto[]
+     * @param $forecastsByHourDtoArray ForecastByHourDto[]
      * */
-    public function getDailyForecast(array $dtoArray): string
+    public function getRainForecastByDay(array $forecastsByHourDtoArray): string
     {
-        //@todo перенести в сервиси анализатор
-        return '';
+        if (!$forecastsByHourDtoArray) {
+            return 'Дождя не ожидается';
+        }
+
+        $highRainChanceForecasts = array_filter(
+            $forecastsByHourDtoArray,
+            static fn(ForecastByHourDto $el) => $el->rain_chance > 50
+        );
+
+        $everyHourRainChunks = [];
+        foreach ($highRainChanceForecasts as $forecast) {
+            if (!$everyHourRainChunks) {
+                $everyHourRainChunks[][] = $forecast;
+                continue;
+            }
+
+            $chunkKey = array_key_last($everyHourRainChunks);
+            $lastForecastOfChunk = end($everyHourRainChunks[$chunkKey]);
+            $datetimeDiff = $forecast->datetime->diff($lastForecastOfChunk->datetime);
+            if ($datetimeDiff->h > 1) {
+                $everyHourRainChunks[][] = $forecast;
+                continue;
+            }
+
+            $everyHourRainChunks[$chunkKey][] = $forecast;
+        }
+
+        $rainForecast = 'Возможен дождь! ';
+        foreach ($everyHourRainChunks as $chunk) {
+            $array = array_values($chunk);
+            $rainBeginForecast = array_shift($array);
+            if (count($chunk) === 1) {
+                $rainForecast = $rainForecast . 'В ' . $rainBeginForecast->datetime->format('G:i') . '. ';
+                continue;
+            }
+
+            $rainEndForecast = end($chunk);
+            $timeBegin = $rainBeginForecast->datetime->format('G:i');
+            $timeEnd = $rainEndForecast->datetime->format('G:i');
+            $forecast = 'C ' . $timeBegin . ' до ' . $timeEnd . '. ';
+            $rainForecast = $rainForecast . $forecast;
+        }
+
+        return $rainForecast;
     }
 }

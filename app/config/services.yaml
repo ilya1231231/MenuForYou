@@ -19,14 +19,9 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
-    App\Validator\Infrastructure\ValidatorFactory:
-        arguments:
-            $pathToValidationLangDir: '%kernel.project_dir%/translations/validation/lang'
-            $locale: 'ru'
-        lazy: true
     App\Infrastructure\EventSubscribers\ExceptionEventSubscriber:
 
-    App\Cli\CronJob\Hourly\MailRuWeatherParser:
+    App\Modules\MailRuWeather\Infrastructure\Readers\MailRuWeatherReader:
         arguments:
             $mailRuWeatherUrl: '%env(MAIL_RU_WEATHER_URL)%'
 

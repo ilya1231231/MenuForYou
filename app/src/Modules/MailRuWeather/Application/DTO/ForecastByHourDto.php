@@ -4,7 +4,7 @@ namespace App\Modules\MailRuWeather\Application\DTO;
 
 class ForecastByHourDto
 {
-    readonly public \DateTime $time;
+    readonly public \DateTime $datetime;
 
     readonly public string $temp;
 
@@ -14,7 +14,7 @@ class ForecastByHourDto
 
     public function __construct(array $data)
     {
-        $this->time = $data['time'];
+        $this->datetime = $data['time'];
         $this->temp = $data['temp'];
         $this->temp_sense = $data['temp_sense'];
         $this->rain_chance = $data['rain_chance'];
