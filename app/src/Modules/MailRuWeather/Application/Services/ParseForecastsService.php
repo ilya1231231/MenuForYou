@@ -25,15 +25,43 @@ class ParseForecastsService
             throw new \Exception('Нужно переделывать парсинг. Нет данных по датам');
         }
 
-        $forecasts = array_map(static fn($dates) => $dates['forecasts'] ?? [], $dates);
+        $forecastsByDay = array_map(static fn($dates) => $dates['forecasts'] ?? [], $dates);
 
-        $todayForecast = $forecasts[0];
+        $todayForecast = $forecastsByDay[0];
         if (!$todayForecast) {
             throw new \Exception('Нет данных по прогнозу на сегодня');
         }
 
-        $todayForecastsByHour = [];
-        foreach ($todayForecast as $forecast) {
+        $tomorrowForecast = $forecastsByDay[1];
+        if (!$tomorrowForecast) {
+            throw new \Exception('Нет данных по прогнозу на сегодня');
+        }
+
+        $todayForecastsByHour = $this->prepareByHourForecastsOfDay($todayForecast);
+        $tomorrowForecastsByHour = $this->prepareByHourForecastsOfDay($tomorrowForecast);
+
+        return new ForecastByDaysDto($todayForecastsByHour, $tomorrowForecastsByHour);
+    }
+
+    private function getRainType(string $description): ?string
+    {
+        if(!str_contains($description, 'дождь')) {
+            return null;
+        }
+
+        $explodedDescription = explode(',', $description);
+        $rawRainType = $explodedDescription[1];
+
+        return trim($rawRainType);
+    }
+
+    /**
+     * @return ForecastByHourDto[]
+     * */
+    private function prepareByHourForecastsOfDay(array $rawByHourForecastsOfDay): array
+    {
+        $byHourForecastsOfDay = [];
+        foreach ($rawByHourForecastsOfDay as $forecast) {
             $isForecastDataExist =
                 !empty($forecast['time'])
                 && !empty($forecast['tempe'])
@@ -50,20 +78,20 @@ class ParseForecastsService
             $explodedTime = explode(':', $forecast['time']);
             $hour = $explodedTime[0];
             $minutes = $explodedTime[1];
+            $rainType = $this->getRainType($forecast['description']);
 
             $data = [
                 'time' => $datetime->setTime($hour, $minutes),
                 'temp' => $forecast['tempe'],
                 'temp_sense' => $forecast['tempe_comf'],
                 'rain_chance' => $forecast['precip_prob'],
-                'description' => $forecast['description'],
+                'rain_type' => $rainType,
             ];
             $forecastForHourDto = new ForecastByHourDto($data);
 
-            $todayForecastsByHour[] = $forecastForHourDto;
+            $byHourForecastsOfDay[] = $forecastForHourDto;
         }
 
-        return new ForecastByDaysDto($todayForecastsByHour, null);
+        return $byHourForecastsOfDay;
     }
-
 }

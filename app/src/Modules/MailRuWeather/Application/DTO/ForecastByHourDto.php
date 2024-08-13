@@ -12,7 +12,7 @@ class ForecastByHourDto
 
     readonly public int $rain_chance;
 
-    readonly public string $description;
+    readonly public ?string $rain_type;
 
     public function __construct(array $data)
     {
@@ -20,7 +20,7 @@ class ForecastByHourDto
         $this->temp = $data['temp'];
         $this->temp_sense = $data['temp_sense'];
         $this->rain_chance = $data['rain_chance'];
-        $this->description = $data['description'];
+        $this->rain_type = $data['rain_type'];
     }
 
 }
