@@ -11,14 +11,14 @@ class ForecastAnalyzerService
      * */
     public function getRainForecastByDay(array $forecastsByHourDtoArray): string
     {
-        if (!$forecastsByHourDtoArray) {
-            return 'Дождя не ожидается';
-        }
-
         $highRainChanceForecasts = array_filter(
             $forecastsByHourDtoArray,
             static fn(ForecastByHourDto $el) => $el->rain_chance > 50
         );
+
+        if (!$highRainChanceForecasts) {
+            return 'Дождя не ожидается';
+        }
 
         $everyHourRainChunks = [];
         foreach ($highRainChanceForecasts as $forecast) {
@@ -38,7 +38,7 @@ class ForecastAnalyzerService
             $everyHourRainChunks[$chunkKey][] = $forecast;
         }
 
-        $rainForecast = 'Возможен дождь! ';
+        $rainForecast = '<b>Прогноз по осадкам!</b>';
         foreach ($everyHourRainChunks as $chunk) {
             $array = array_values($chunk);
             $rainBeginForecast = array_shift($array);

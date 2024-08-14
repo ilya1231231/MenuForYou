@@ -27,16 +27,8 @@ class ParseForecastsService
 
         $forecastsByDay = array_map(static fn($dates) => $dates['forecasts'] ?? [], $dates);
 
-        $todayForecast = $forecastsByDay[0];
-        if (!$todayForecast) {
-            throw new \Exception('Нет данных по прогнозу на сегодня');
-        }
-
-        $tomorrowForecast = $forecastsByDay[1];
-        if (!$tomorrowForecast) {
-            throw new \Exception('Нет данных по прогнозу на сегодня');
-        }
-
+        $todayForecast = !empty($forecastsByDay[0]) ? $forecastsByDay[0] : [];
+        $tomorrowForecast = !empty($forecastsByDay[1]) ? $forecastsByDay[1] : [];
         $todayForecastsByHour = $this->prepareByHourForecastsOfDay($todayForecast);
         $tomorrowForecastsByHour = $this->prepareByHourForecastsOfDay($tomorrowForecast);
 
@@ -58,8 +50,13 @@ class ParseForecastsService
     /**
      * @return ForecastByHourDto[]
      * */
-    private function prepareByHourForecastsOfDay(array $rawByHourForecastsOfDay): array
+    private function prepareByHourForecastsOfDay(array $rawByHourForecastsOfDay): ?array
     {
+        if (!$rawByHourForecastsOfDay) {
+//            @todo залогировтаь
+            return null;
+        }
+
         $byHourForecastsOfDay = [];
         foreach ($rawByHourForecastsOfDay as $forecast) {
             $isForecastDataExist =

@@ -33,6 +33,9 @@ class MorningForecastTelegramNotifier extends Command
     {
         $json = $this->mailRuWeatherReader->getForecastsAsJson();
         $todayForecasts = $this->parseForecastsService->parseForecastsJson($json)->currentDayForecasts;
+        if (!$todayForecasts) {
+            throw new \Exception('Не удалось спарсить прогнозы за сегодня');
+        }
         $rainForecast = $this->forecastAnalyzerService->getRainForecastByDay($todayForecasts);
         $dto = new TelegramMessageDto($this->telegramChatId, $rainForecast, 'html');
         $this->telegramNotifierService->sendMessage($dto);
