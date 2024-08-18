@@ -38,12 +38,12 @@ class ForecastAnalyzerService
             $everyHourRainChunks[$chunkKey][] = $forecast;
         }
 
-        $rainForecast = '<b>Прогноз по осадкам!</b>';
+        $rainForecast = '<b>Прогноз по осадкам</b> ';
         foreach ($everyHourRainChunks as $chunk) {
             $array = array_values($chunk);
             $rainBeginForecast = array_shift($array);
             if (count($chunk) === 1) {
-                $rainForecast = $rainForecast . 'В ' . $rainBeginForecast->datetime->format('G:i') . '. ';
+                $rainForecast = $rainForecast . $this->buildSingleHourRainForecast($rainBeginForecast);
                 continue;
             }
 
@@ -55,5 +55,21 @@ class ForecastAnalyzerService
         }
 
         return $rainForecast;
+    }
+
+    private function buildSingleHourRainForecast(ForecastByHourDto $rainBeginForecast): string
+    {
+        return "\xE2\x98\x94 \n"
+            . $rainBeginForecast->rain_type
+            . ' в ' . $rainBeginForecast->datetime->format('G:i') . '.';
+    }
+
+    /**
+     * @param ForecastByHourDto[] $chunk
+     * */
+    private function buildMultipleHoursRainForecast(array $chunk): string
+    {
+        //@todo доделать
+        return '';
     }
 }

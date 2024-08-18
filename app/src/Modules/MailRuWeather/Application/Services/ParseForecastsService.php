@@ -44,7 +44,15 @@ class ParseForecastsService
         $explodedDescription = explode(',', $description);
         $rawRainType = $explodedDescription[1];
 
-        return trim($rawRainType);
+        return $this->firstCharToUppercase(trim($rawRainType));
+    }
+
+    private function firstCharToUppercase(string $string, $encoding = 'UTF-8'): string
+    {
+        $strlen		= mb_strlen($string, $encoding);
+        $first_char	= mb_substr($string, 0, 1, $encoding);
+        $then		= mb_substr($string, 1, $strlen - 1, $encoding);
+        return mb_strtoupper($first_char, $encoding) . mb_strtolower($then, $encoding);
     }
 
     /**

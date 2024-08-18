@@ -2,11 +2,8 @@
 
 namespace App\Cli\CronJob\Daily;
 
-use App\Modules\MailRuWeather\Application\DTO\ForecastByHourDto;
 use App\Modules\MailRuWeather\Application\Services\ForecastAnalyzerService;
 use App\Modules\MailRuWeather\Application\Services\ParseForecastsService;
-use App\Modules\MailRuWeather\Infrastructure\Dbal\Entity\MailRuWeather;
-use App\Modules\MailRuWeather\Infrastructure\Dbal\Repository\MailRuWeatherRepository;
 use App\Modules\MailRuWeather\Infrastructure\Readers\MailRuWeatherReader;
 use App\Modules\Telegram\Application\DTO\TelegramMessageDto;
 use App\Modules\Telegram\Application\Services\TelegramNotifierService;
