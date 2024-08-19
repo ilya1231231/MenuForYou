@@ -4,7 +4,7 @@ namespace App\Modules\MailRuWeather\Application\Services;
 
 use App\Modules\MailRuWeather\Application\DTO\ForecastByHourDto;
 
-class ForecastAnalyzerService
+class RainForecastAnalyzerService
 {
     /**
      * @param $forecastsByHourDtoArray ForecastByHourDto[]

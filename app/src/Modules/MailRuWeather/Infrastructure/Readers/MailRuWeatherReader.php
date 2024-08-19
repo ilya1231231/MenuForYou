@@ -14,7 +14,7 @@ class MailRuWeatherReader
 
     public function getForecastsAsJson(): string
     {
-        $parseUrl = $this->mailRuWeatherUrl . '/prognoz/yoshkar-ola/24hours/';
+        $parseUrl = $this->mailRuWeatherUrl . '/prognoz/yoshkar-ola/';
         $rawHtml = file_get_contents($parseUrl);
         $crawler = new Crawler($rawHtml);
         $crawler = $crawler->filter('div[data-module="ForecastHour"]');

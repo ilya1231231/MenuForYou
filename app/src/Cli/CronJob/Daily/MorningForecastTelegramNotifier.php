@@ -2,7 +2,7 @@
 
 namespace App\Cli\CronJob\Daily;
 
-use App\Modules\MailRuWeather\Application\Services\ForecastAnalyzerService;
+use App\Modules\MailRuWeather\Application\Services\RainForecastAnalyzerService;
 use App\Modules\MailRuWeather\Application\Services\ParseForecastsService;
 use App\Modules\MailRuWeather\Infrastructure\Readers\MailRuWeatherReader;
 use App\Modules\Telegram\Application\DTO\TelegramMessageDto;
@@ -16,11 +16,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 class MorningForecastTelegramNotifier extends Command
 {
     public function __construct(
-        private readonly ParseForecastsService $parseForecastsService,
-        private readonly ForecastAnalyzerService $forecastAnalyzerService,
-        private readonly TelegramNotifierService $telegramNotifierService,
-        private readonly MailRuWeatherReader $mailRuWeatherReader,
-        private readonly string $telegramChatId,
+        private readonly ParseForecastsService       $parseForecastsService,
+        private readonly RainForecastAnalyzerService $rainForecastAnalyzerService,
+        private readonly TelegramNotifierService     $telegramNotifierService,
+        private readonly MailRuWeatherReader         $mailRuWeatherReader,
+        private readonly string                      $telegramChatId,
     ){
         parent::__construct();
     }
@@ -33,7 +33,7 @@ class MorningForecastTelegramNotifier extends Command
         if (!$todayForecasts) {
             throw new \Exception('Не удалось спарсить прогнозы за сегодня');
         }
-        $rainForecast = $this->forecastAnalyzerService->getRainForecastByDay($todayForecasts);
+        $rainForecast = $this->rainForecastAnalyzerService->getRainForecastByDay($todayForecasts);
         $dto = new TelegramMessageDto($this->telegramChatId, $rainForecast, 'html');
         $this->telegramNotifierService->sendMessage($dto);
         return 1;
